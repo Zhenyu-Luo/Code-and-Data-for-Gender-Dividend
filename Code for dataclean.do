@@ -1205,5 +1205,102 @@ coefplot Exponential, bylabel("{bf:Survival Model}") ///
 	Fertility  = "{bf:Social and Demographic}" ///
 	Average_Temperature = "{bf:Geographic}" )
 
+	
+clear
+use saveload1.dta, replace
+keep edu_junior_mean edu_senior_mean edu_high_mean agriculture_mean industrywork_mean highskill_mean total_ceb_mean prefect pre_sex_ratio temp pop_densit nightlight wheat_suit rice_suita terrain clan_density river province_code age contraction_exponential contraction_linear
+duplicates drop
+
+norm edu_junior_mean edu_senior_mean edu_high_mean agriculture_mean industrywork_mean highskill_mean total_ceb_mean pre_sex_ratio temp pop_densit nightlight wheat_suit rice_suita terrain clan_density river, method(zee)
+
+eststo clear  
+
+rename zee_edu_junior_mean Junior_Education
+rename zee_edu_senior_mean Senior_Education
+rename zee_edu_high_mean College_Education
+rename zee_agriculture_mean Agricultural_Proportion
+rename zee_industrywork_mean Manufactural_Proportion
+rename zee_highskill_mean Proficient_Proportion
+rename zee_total_ceb_mean Fertility
+rename zee_pre_sex_ratio Previous_SRB
+rename zee_temp Average_Temperature
+rename zee_pop_densit Population_Density
+rename zee_nightlight Night_Light_Density
+rename zee_wheat_suit Soil_Suitablity_for_Wheat
+rename zee_rice_suita Soil_Suitablity_for_Rice 
+rename zee_terrain Terrain_Roughness 
+rename zee_clan_density Clan_Per_Capita
+rename zee_river River_Length 
+	
+reghdfe contraction_exponential Agricultural_Proportion if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store Agri
+
+reghdfe contraction_exponential Manufactural_Proportion if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store Manu
+
+reghdfe contraction_exponential Night_Light_Density if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store NightLight
+
+reghdfe contraction_exponential Population_Density if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store PopDensity
+
+reghdfe contraction_exponential Previous_SRB if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store SRB
+
+reghdfe contraction_exponential Clan_Per_Capita if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store Clan
+
+reghdfe contraction_exponential Soil_Suitablity_for_Wheat if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store Wheat
+
+reghdfe contraction_exponential Soil_Suitablity_for_Rice if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store Rice
+
+reghdfe contraction_exponential Terrain_Roughness if age > 28 & age < 32, a(i.province_code#i.age) cluster(province_code)
+est store Terrain
+
+coefplot ///
+    Agri Manu NightLight ///
+    PopDensity SRB Clan ///
+    Wheat Rice Terrain, ///
+    drop(_cons) levels(95) ///
+    scheme(s1color) ///
+    xline(0) ///
+    legend(off) ///
+    msymbol(O) mcolor(black) ciopts(color(gs8)) ///
+	headings(Agricultural_Proportion  = "{bf:Economic}" ///
+	Population_Density  = "{bf:Social and Demographic}" ///
+	Soil_Suitablity_for_Wheat = "{bf:Geographic}" )
+
+
+
+	
+
+
+
+				
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
